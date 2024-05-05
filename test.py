@@ -17,6 +17,7 @@ capabilities = dict(
     locale='US'
 )
 
+
 class TestAppium(unittest.TestCase):
     def setUp(self) -> None:
         self.driver = webdriver.Remote(
@@ -27,7 +28,6 @@ class TestAppium(unittest.TestCase):
         self.action_helpers = ActionHelpers
         self.wait = WebDriverWait(self.driver, 3, poll_frequency=0.5)
 
-
     def tearDown(self) -> None:
         if self.driver:
             self.driver.quit()
@@ -36,12 +36,11 @@ class TestAppium(unittest.TestCase):
         time.sleep(timeInt)
         self.driver.tap(arr)
 
-    def my_click(self, type, locator, timeInt=0):
-        time.sleep(timeInt)
+    def my_click(self, type, locator):
         self.wait.until(EC.presence_of_element_located((type, locator)))
         self.driver.find_element(type, locator).click()
 
-    def my_send_keys(self, type, locator, value, timeInt=0):
+    def my_send_keys(self, type, locator, value):
         self.wait.until(EC.presence_of_element_located((type, locator)))
         self.driver.find_element(type, locator).send_keys(value)
 
@@ -55,16 +54,18 @@ class TestAppium(unittest.TestCase):
     def home(self, timeInt=1):
         type = AppiumBy.ANDROID_UIAUTOMATOR
         locator = home
+        locator1 = home_1
 
-        while(True):
+        while True:
             try:
                 WebDriverWait(self.driver, 5, poll_frequency=0.5).until(EC.presence_of_element_located((type, locator)))
+                WebDriverWait(self.driver, 5, poll_frequency=0.5).until(EC.presence_of_element_located((type, locator1)))
                 self.driver.find_element(type, locator).click()
                 break
             except:
                 self.exit(timeInt=timeInt)
 
-    def first(self):
+    def test_first(self):
         try:
             self.my_click(AppiumBy.ANDROID_UIAUTOMATOR, button_search)
             self.my_send_keys(AppiumBy.ANDROID_UIAUTOMATOR, input_search, "Marko developer")
@@ -72,13 +73,13 @@ class TestAppium(unittest.TestCase):
 
             time.sleep(1)
             self.my_tap([[500, 1000]], timeInt=1)
-            self.my_click(AppiumBy.XPATH, like_xpath, timeInt=1)
+            self.my_click(AppiumBy.ANDROID_UIAUTOMATOR, dislike)
         except Exception as e:
             print(e)
         finally:
             self.home()
-    
-    def second(self):
+
+    def test_second(self):
         try:
             el1 = self.driver.find_element(AppiumBy.ID, toolbar)
             el2 = self.driver.find_element(AppiumBy.ID, navbar)
@@ -93,15 +94,36 @@ class TestAppium(unittest.TestCase):
         finally:
             self.home()
 
-    # def test_third(self):
-    #     try:
-            
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.home()
+    def test_third(self):
+        try:
+            el1 = self.driver.find_element(AppiumBy.ID, control)
+            el2 = self.driver.find_element(AppiumBy.ID, navbar)
+            self.action_helpers.scroll(self.driver, el2, el1)
+            self.my_click(AppiumBy.ANDROID_UIAUTOMATOR, chrome)
+        except Exception as e:
+            print(e)
+        finally:
+            self.home()
 
-        
+    def test_fourth(self):
+        try:
+            self.my_tap([[500, 1000]], timeInt=1)
+            self.my_tap([[500, 2000]], timeInt=3)
+            self.my_tap([[500, 2000]], timeInt=2)
+        except Exception as e:
+            print(e)
+        finally:
+            self.home()
+
+    def test_fifth(self):
+        try:
+            self.my_tap([[1018, 340]])
+            self.my_tap([[300, 1530]], timeInt=1)
+        except Exception as e:
+            print(e)
+        finally:
+            self.home()
+
 
 if __name__ == '__main__':
     unittest.main()
